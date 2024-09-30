@@ -16,6 +16,12 @@ class Customer
     private string $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    private string $gender;
+
+    #[ORM\Column(type: 'integer')]
+    private int $age;
+
+    #[ORM\Column(type: 'string', length: 255)]
     private string $email;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -56,6 +62,28 @@ class Customer
     public function setLocation(string $location): self
     {
         $this->location = $location;
+        return $this;
+    }
+
+    public function getGender(): string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(string $gender): self
+    {
+        $this->gender = $gender;
+        return $this;
+    }
+
+    public function getAge(): int
+    {
+        return $this->age;
+    }
+
+    public function setAge(int $age): self
+    {
+        $this->age = $age;
         return $this;
     }
 }
