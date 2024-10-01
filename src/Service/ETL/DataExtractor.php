@@ -3,6 +3,7 @@
 namespace App\Service\ETL;
 
 use Faker\Generator;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Faker\Factory;
 
@@ -12,7 +13,8 @@ class DataExtractor
     private array $exchangeRates;
 
     public function __construct(
-        private readonly HttpClientInterface $httpClient
+        private readonly HttpClientInterface $httpClient,
+        private readonly LoggerInterface     $logger,
     )
     {
         $this->faker = Factory::create();
@@ -111,7 +113,7 @@ class DataExtractor
 
         // Read CSV and extract data
         if (($handle = fopen($filePath, 'r')) !== false) {
-            while (($row = fgetcsv($handle, 1000, ",")) !== false) {
+            while (($row = fgetcsv($handle, 1000)) !== false) {
                 if (!$header) {
                     $header = $row;  // Store the header row to use as keys
                     continue;
@@ -145,9 +147,17 @@ class DataExtractor
     // Method to fetch data from public API (e.g., currency exchange rates)
     public function fetchExchangeRates(): array
     {
-        $response = $this->httpClient->request('GET', 'https://api.exchangerate-api.com/v4/latest/USD');
-        $content = $response->toArray();
+        try {
+            $response = $this->httpClient->request('GET', 'https://api.exchangerate-api.com/v4/latest/USD');
+            $content = $response->toArray();
 
-        return $content['rates'];
+            return $content['rates'];
+        } catch (\Throwable $e) {
+            $this->logger->error('Error fetching exchange rates', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return [];
+        }
     }
 }
