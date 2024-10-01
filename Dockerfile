@@ -26,5 +26,7 @@ RUN composer install
 RUN curl -sS https://get.symfony.com/cli/installer | bash && \
     mv /root/.symfony*/bin/symfony /usr/local/bin/symfony
 
+RUN echo "memory_limit = ${PHP_MEMORY_LIMIT:-512M}" > /usr/local/etc/php/conf.d/memory-limit.ini
+
 # Set default command
 CMD ["tail", "-f", "/dev/null"]

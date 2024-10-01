@@ -7,10 +7,9 @@ services:
     working_dir: /app
     depends_on:
       - mariadb
-      - redis
     environment:
       DATABASE_URL: "mysql://symfony:symfony@mariadb:3306/symfony"
-      REDIS_URL: "redis://redis:6379"
+      PHP_MEMORY_LIMIT: "512M"
     command: tail -f /dev/null
     tty: true
 
@@ -28,15 +27,5 @@ services:
     ports:
       - "3306:3306"
 
-  redis:
-    image: redis:7.0
-    container_name: redis
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-
 volumes:
   mariadb_data:
-  redis_data:
