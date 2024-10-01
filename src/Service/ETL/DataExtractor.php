@@ -9,12 +9,14 @@ use Faker\Factory;
 class DataExtractor
 {
     private Generator $faker;
+    private array $exchangeRates;
 
     public function __construct(
         private readonly HttpClientInterface $httpClient
     )
     {
         $this->faker = Factory::create();
+        $this->exchangeRates = $this->fetchExchangeRates();
     }
 
     // Method to simulate customers data using Faker
@@ -40,7 +42,7 @@ class DataExtractor
         for ($i = 0; $i < $count; $i++) {
             $products[] = [
                 'name' => $this->faker->word(),
-                'price' => $this->faker->randomFloat(2, 10, 1000),
+                'price' => $this->faker->randomFloat(2, 10, 1000) * $this->exchangeRates['EUR'],
                 'category' => $this->faker->randomElement(['Electronics', 'Clothing', 'Books', 'Toys'])
             ];
         }
@@ -73,7 +75,7 @@ class DataExtractor
                 'customer_id' => $this->faker->numberBetween(1, $customerCount),
                 'product_id' => $this->faker->numberBetween(1, $productCount),
                 'time_id' => $this->faker->numberBetween(1, $timeCount),
-                'amount' => $this->faker->randomFloat(2, 50, 1000),
+                'amount' => $this->faker->randomFloat(2, 50, 1000) * $this->exchangeRates['EUR'],
                 'quantity' => $this->faker->numberBetween(1, 5),
             ];
         }
@@ -89,7 +91,7 @@ class DataExtractor
                 'customer_id' => $this->faker->numberBetween(1, $customerCount),
                 'product_id' => $this->faker->numberBetween(1, $productCount),
                 'time_id' => $this->faker->numberBetween(1, $timeCount),
-                'total_amount' => $this->faker->randomFloat(2, 50, 500),
+                'total_amount' => $this->faker->randomFloat(2, 50, 500) * $this->exchangeRates['EUR'],
                 'quantity' => $this->faker->numberBetween(1, 5),
             ];
         }
@@ -141,9 +143,11 @@ class DataExtractor
     }
 
     // Method to fetch data from public API (e.g., currency exchange rates)
-    public function fetchFromApi(string $url): array
+    public function fetchExchangeRates(): array
     {
-        $response = $this->httpClient->request('GET', $url);
-        return $response->toArray();
+        $response = $this->httpClient->request('GET', 'https://api.exchangerate-api.com/v4/latest/USD');
+        $content = $response->toArray();
+
+        return $content['rates'];
     }
 }
