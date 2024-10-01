@@ -14,7 +14,10 @@ use App\Entity\Customer;
 
 class DataLoader
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly DataTransformer        $transformer
+    )
     {
     }
 
@@ -23,8 +26,8 @@ class DataLoader
     {
         foreach ($customersData as $customerData) {
             $customer = new Customer();
-            $customer->setName($customerData['name']);
-            $customer->setEmail($customerData['email']);
+            $customer->setName($this->transformer->transformCustomerName($customerData));
+            $customer->setEmail($this->transformer->transformCustomerEmail($customerData));
             $customer->setLocation($customerData['location']);
             $customer->setGender($customerData['gender']);
             $customer->setAge($customerData['age']);
@@ -37,18 +40,19 @@ class DataLoader
     // Method to load product data into the database
     public function loadProducts(array $productsData): void
     {
-        $category = $this->entityManager->getRepository(Category::class)->find(1);
-        if (!$category) {
-            $category = new Category();
-            $category->setName('Default Category');
-            $this->entityManager->persist($category);
-            $this->entityManager->flush();
-        }
-
         foreach ($productsData as $productData) {
             $product = new Product();
             $product->setName($productData['name']);
-            $product->setPrice($productData['price']);
+            $product->setPrice($this->transformer->transformProductPrice($productData));
+
+            $category = $this->entityManager->getRepository(Category::class)->findOneBy(['name' => $productData['category']]);
+            if (!$category) {
+                $category = new Category();
+                $category->setName($productData['category']);
+                $this->entityManager->persist($category);
+                $this->entityManager->flush();
+            }
+
             $product->setCategory($category);
 
             $this->entityManager->persist($product);

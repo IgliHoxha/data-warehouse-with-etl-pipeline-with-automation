@@ -41,6 +41,7 @@ class DataExtractor
             $products[] = [
                 'name' => $this->faker->word(),
                 'price' => $this->faker->randomFloat(2, 10, 1000),
+                'category' => $this->faker->randomElement(['Electronics', 'Clothing', 'Books', 'Toys'])
             ];
         }
         return $products;
@@ -96,16 +97,47 @@ class DataExtractor
     }
 
     // Method to extract data from CSV file
-    public function extractFromCsv(string $filePath): array
+    public function loadFromCsv(string $filePath): array
     {
-        $data = [];
+        if (!file_exists($filePath) || !is_readable($filePath)) {
+            throw new \Exception("CSV file is not accessible or readable.");
+        }
+
+        $header = null;
+        $products = [];
+        $customers = [];
+
+        // Read CSV and extract data
         if (($handle = fopen($filePath, 'r')) !== false) {
             while (($row = fgetcsv($handle, 1000, ",")) !== false) {
-                $data[] = $row;
+                if (!$header) {
+                    $header = $row;  // Store the header row to use as keys
+                    continue;
+                }
+
+                $data = array_combine($header, $row);
+
+                // Collect products
+                $products[] = [
+                    'name' => $data['Item Purchased'],
+                    'category' => $data['Category']
+                ];
+
+                // Collect customers
+                $customers[$data['Customer ID']] = [
+                    'customer_id' => $data['Customer ID'],
+                    'age' => $data['Age'],
+                    'gender' => $data['Gender'],
+                    'location' => $data['Location']
+                ];
             }
             fclose($handle);
         }
-        return $data;
+
+        return [
+            'products' => $products,
+            'customers' => $customers
+        ];
     }
 
     // Method to fetch data from public API (e.g., currency exchange rates)

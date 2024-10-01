@@ -12,7 +12,7 @@ class Category
     #[ORM\Column(type: 'integer')]
     private ?int $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $name;
 
     public function getId(): ?int

@@ -2,45 +2,33 @@
 // src/Service/ETL/DataTransformer.php
 namespace App\Service\ETL;
 
+use Faker\Factory;
+use Faker\Generator;
+
 class DataTransformer
 {
-    // Method to clean and transform data
-    public function transformTransactionalData(array $data): array
+    private Generator $faker;
+
+    public function __construct()
     {
-        foreach ($data as $key => &$record) {
-            // Handle missing values (e.g., set quantity to 1 if not provided)
-            if (!isset($record['quantity'])) {
-                $record['quantity'] = 1;
-            }
-
-            // Normalize fields (e.g., convert amount to float)
-            $record['amount'] = floatval($record['amount']);
-
-            // Add calculated column (e.g., total value)
-            $record['total_value'] = $record['amount'] * $record['quantity'];
-        }
-
-        return $data;
+        $this->faker = Factory::create();
     }
 
-    // Method to transform data from CSV
-    public function transformCsvData(array $csvData): array
+    // Method to handle customer name transformation
+    public function transformCustomerName($data): string
     {
-        $transformed = [];
-        foreach ($csvData as $row) {
-            $transformed[] = [
-                'name' => $row[0],
-                'email' => $row[1],
-                'location' => $row[2],
-            ];
-        }
-        return $transformed;
+        return isset($data['name']) ? strtoupper($data['name']) : $this->faker->name();
     }
 
-    // Method to handle exchange rates transformation
-    public function transformExchangeRates(array $data): array
+    // Method to handle customer email transformation
+    public function transformCustomerEmail($data): string
     {
-        // For example, convert rates to specific currency or format
-        return $data;
+        return $data['email'] ?? $this->faker->email();
+    }
+
+    // Method to handle product price transformation
+    public function transformProductPrice($data): float
+    {
+        return $data['price'] ?? $this->faker->randomFloat(2, 10, 1000);
     }
 }

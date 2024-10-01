@@ -15,7 +15,7 @@ class RunEtlPipelineCommand extends Command
 
     public function __construct(
         private readonly DataExtractor $extractor,
-        private readonly DataLoader $loader
+        private readonly DataLoader    $loader
     )
     {
         parent::__construct();
@@ -36,6 +36,15 @@ class RunEtlPipelineCommand extends Command
         $this->loader->loadTimeData($timeData);
         $this->loader->loadSales($salesData);
         $this->loader->loadOrders($ordersData);
+
+        // Extract cvs data
+        $filePath = __DIR__ . '/../Csv/shopping_trends.csv';
+        $cvsData = $this->extractor->loadFromCsv($filePath);
+
+        // Load data into the database
+        $this->loader->loadCustomers($cvsData['customers']);
+        $this->loader->loadProducts($cvsData['products']);
+
 
         $output->writeln('ETL pipeline executed successfully.');
         return Command::SUCCESS;
