@@ -17,7 +17,7 @@ class DataTransformer
     // Method to handle customer name transformation
     public function transformCustomerName($data): string
     {
-        return isset($data['name']) ? strtoupper($data['name']) : $this->faker->name();
+        return isset($data['name']) ? ucwords(strtolower($data['name'])) : $this->faker->name();
     }
 
     // Method to handle customer email transformation
