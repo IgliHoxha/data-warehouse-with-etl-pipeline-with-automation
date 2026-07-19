@@ -1,26 +1,27 @@
 <?php
+
 // src/Service/ETL/DataLoader.php
+
 namespace App\Service\ETL;
 
 use App\Entity\Category;
+use App\Entity\Customer;
 use App\Entity\Date;
 use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\Sale;
 use App\Entity\Time;
 use App\Entity\Week;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Sale;
-use App\Entity\Customer;
 use Psr\Log\LoggerInterface;
 
 class DataLoader
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly DataTransformer        $transformer,
-        private readonly LoggerInterface        $logger,
-    )
-    {
+        private readonly DataTransformer $transformer,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     // Method to load customer data into the database
@@ -45,7 +46,7 @@ class DataLoader
             $this->entityManager->rollback();
             $this->logger->error('Error loading customers data', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }
@@ -78,7 +79,7 @@ class DataLoader
             $this->entityManager->rollback();
             $this->logger->error('Error loading products data', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }
@@ -119,7 +120,7 @@ class DataLoader
             $this->entityManager->rollback();
             $this->logger->error('Error loading time data', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }
@@ -151,7 +152,7 @@ class DataLoader
             $this->entityManager->rollback();
             $this->logger->error('Error loading sales data', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }
@@ -183,7 +184,7 @@ class DataLoader
             $this->entityManager->rollback();
             $this->logger->error('Error loading orders data', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }

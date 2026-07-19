@@ -1,5 +1,7 @@
 <?php
+
 // src/Entity/Date.php
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +12,7 @@ class Date
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'date')]
     private $date;
@@ -29,6 +31,7 @@ class Date
     public function setId(?int $id): Date
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -40,6 +43,7 @@ class Date
     public function setDate($date)
     {
         $this->date = $date;
+
         return $this;
     }
 
@@ -51,6 +55,7 @@ class Date
     public function setDayName(string $dayName): self
     {
         $this->dayName = $dayName;
+
         return $this;
     }
 
@@ -62,6 +67,7 @@ class Date
     public function setIsHoliday(bool $isHoliday): self
     {
         $this->isHoliday = $isHoliday;
+
         return $this;
     }
 }

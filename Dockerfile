@@ -21,8 +21,10 @@ WORKDIR /app
 # Copy Symfony project files
 COPY . .
 
-# Install project dependencies
-RUN composer install
+# Install project dependencies. Skip the Symfony auto-scripts (cache:clear,
+# assets:install) at build time — they boot the kernel and need a .env, which is
+# provided at runtime (docker-compose env + bind mount), not baked into the image.
+RUN composer install --no-interaction --no-scripts
 
 # Add Symfony binary to the PATH
 RUN curl -sS https://get.symfony.com/cli/installer | bash && \

@@ -1,5 +1,7 @@
 <?php
+
 // src/Entity/Category.php
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +12,7 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $name;
@@ -28,6 +30,7 @@ class Category
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 }

@@ -1,5 +1,7 @@
 <?php
+
 // src/Schedule/EtlPipelineScheduler.php
+
 namespace App\Schedule;
 
 use App\Message\EtlPipelineMessage;
@@ -20,5 +22,4 @@ class EtlPipelineScheduler implements ScheduleProviderInterface
                 RecurringMessage::cron('0 * * * *', new EtlPipelineMessage())
             );
     }
-
 }

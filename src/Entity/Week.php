@@ -1,5 +1,7 @@
 <?php
+
 // src/Entity/Week.php
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +12,7 @@ class Week
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'integer')]
     private int $weekNumber;
@@ -31,6 +33,7 @@ class Week
     public function setWeekNumber(int $weekNumber): self
     {
         $this->weekNumber = $weekNumber;
+
         return $this;
     }
 
@@ -42,6 +45,7 @@ class Week
     public function setYear(int $year): self
     {
         $this->year = $year;
+
         return $this;
     }
 }

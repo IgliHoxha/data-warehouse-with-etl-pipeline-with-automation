@@ -1,5 +1,7 @@
 <?php
+
 // src/Entity/Customer.php
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +12,7 @@ class Customer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
@@ -40,6 +42,7 @@ class Customer
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -51,6 +54,7 @@ class Customer
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -62,6 +66,7 @@ class Customer
     public function setLocation(string $location): self
     {
         $this->location = $location;
+
         return $this;
     }
 
@@ -73,6 +78,7 @@ class Customer
     public function setGender(string $gender): self
     {
         $this->gender = $gender;
+
         return $this;
     }
 
@@ -84,6 +90,7 @@ class Customer
     public function setAge(int $age): self
     {
         $this->age = $age;
+
         return $this;
     }
 }

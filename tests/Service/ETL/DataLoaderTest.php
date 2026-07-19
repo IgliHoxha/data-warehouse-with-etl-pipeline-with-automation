@@ -11,14 +11,15 @@ use App\Service\ETL\DataLoader;
 use App\Service\ETL\DataTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class DataLoaderTest extends TestCase
 {
-    private EntityManagerInterface $entityManager;
-    private DataTransformer $transformer;
-    private LoggerInterface $logger;
+    private EntityManagerInterface&MockObject $entityManager;
+    private DataTransformer&MockObject $transformer;
+    private LoggerInterface&MockObject $logger;
     private DataLoader $dataLoader;
 
     protected function setUp(): void
@@ -38,7 +39,7 @@ class DataLoaderTest extends TestCase
                 'email' => 'john.doe@example.com',
                 'location' => 'New York',
                 'gender' => 'Male',
-                'age' => 30
+                'age' => 30,
             ],
         ];
 
@@ -63,7 +64,7 @@ class DataLoaderTest extends TestCase
                 'email' => 'john.doe@example.com',
                 'location' => 'New York',
                 'gender' => 'Male',
-                'age' => 30
+                'age' => 30,
             ],
         ];
 
@@ -83,7 +84,7 @@ class DataLoaderTest extends TestCase
             [
                 'name' => 'Product A',
                 'price' => 100.12,
-                'category' => 'Electronics'
+                'category' => 'Electronics',
             ],
         ];
 
@@ -115,7 +116,7 @@ class DataLoaderTest extends TestCase
                 'product_id' => 1,
                 'time_id' => 1,
                 'amount' => 150,
-                'quantity' => 2
+                'quantity' => 2,
             ],
         ];
 
@@ -136,7 +137,7 @@ class DataLoaderTest extends TestCase
         $this->entityManager->method('getRepository')->willReturnMap([
             [Customer::class, $customerRepository],
             [Product::class, $productRepository],
-            [Time::class, $timeRepository]
+            [Time::class, $timeRepository],
         ]);
 
         // Ensure persist, flush, and commit are called

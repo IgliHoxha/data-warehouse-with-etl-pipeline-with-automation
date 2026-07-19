@@ -1,5 +1,7 @@
 <?php
+
 // src/Entity/Sale.php
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +12,7 @@ class Sale
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Product::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -43,6 +45,7 @@ class Sale
     public function setProduct(Product $product): self
     {
         $this->product = $product;
+
         return $this;
     }
 
@@ -54,6 +57,7 @@ class Sale
     public function setCustomer(Customer $customer): self
     {
         $this->customer = $customer;
+
         return $this;
     }
 
@@ -65,6 +69,7 @@ class Sale
     public function setTime(Time $time): self
     {
         $this->time = $time;
+
         return $this;
     }
 
@@ -76,6 +81,7 @@ class Sale
     public function setAmount(float $amount): self
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -87,6 +93,7 @@ class Sale
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
+
         return $this;
     }
 }

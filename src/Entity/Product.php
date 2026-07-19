@@ -1,5 +1,7 @@
 <?php
+
 // src/Entity/Product.php
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +12,7 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
@@ -35,6 +37,7 @@ class Product
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -46,6 +49,7 @@ class Product
     public function setPrice(float $price): self
     {
         $this->price = $price;
+
         return $this;
     }
 
@@ -57,6 +61,7 @@ class Product
     public function setCategory(Category $category): self
     {
         $this->category = $category;
+
         return $this;
     }
 }

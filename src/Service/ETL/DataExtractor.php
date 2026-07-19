@@ -1,11 +1,13 @@
 <?php
+
 // src/Service/ETL/DataExtractor.php
+
 namespace App\Service\ETL;
 
+use Faker\Factory;
 use Faker\Generator;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Faker\Factory;
 
 class DataExtractor
 {
@@ -14,9 +16,8 @@ class DataExtractor
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-        private readonly LoggerInterface     $logger,
-    )
-    {
+        private readonly LoggerInterface $logger,
+    ) {
         $this->faker = Factory::create();
         $this->exchangeRates = $this->fetchExchangeRates();
     }
@@ -25,15 +26,16 @@ class DataExtractor
     public function extractCustomersData(int $count = 10): array
     {
         $customers = [];
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $customers[] = [
                 'name' => $this->faker->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'location' => $this->faker->city(),
                 'gender' => $this->faker->randomElement(['Male', 'Female']),
-                'age' => $this->faker->numberBetween(18, 65)
+                'age' => $this->faker->numberBetween(18, 65),
             ];
         }
+
         return $customers;
     }
 
@@ -41,13 +43,14 @@ class DataExtractor
     public function extractProductsData(int $count = 10): array
     {
         $products = [];
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $products[] = [
                 'name' => $this->faker->word(),
                 'price' => $this->faker->randomFloat(2, 10, 1000) * $this->exchangeRates['EUR'],
-                'category' => $this->faker->randomElement(['Electronics', 'Clothing', 'Books', 'Toys'])
+                'category' => $this->faker->randomElement(['Electronics', 'Clothing', 'Books', 'Toys']),
             ];
         }
+
         return $products;
     }
 
@@ -55,7 +58,7 @@ class DataExtractor
     public function extractTimeData(int $count = 20): array
     {
         $timeData = [];
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $date = $this->faker->dateTimeThisYear();
             $timeData[] = [
                 'date' => $date,
@@ -65,6 +68,7 @@ class DataExtractor
                 'year' => $date->format('Y'),
             ];
         }
+
         return $timeData;
     }
 
@@ -72,7 +76,7 @@ class DataExtractor
     public function extractSalesData(int $saleCount = 20, int $customerCount = 10, int $productCount = 10, int $timeCount = 20): array
     {
         $sales = [];
-        for ($i = 0; $i < $saleCount; $i++) {
+        for ($i = 0; $i < $saleCount; ++$i) {
             $sales[] = [
                 'customer_id' => $this->faker->numberBetween(1, $customerCount),
                 'product_id' => $this->faker->numberBetween(1, $productCount),
@@ -81,6 +85,7 @@ class DataExtractor
                 'quantity' => $this->faker->numberBetween(1, 5),
             ];
         }
+
         return $sales;
     }
 
@@ -88,7 +93,7 @@ class DataExtractor
     public function extractOrdersData(int $orderCount = 20, int $customerCount = 10, int $productCount = 10, int $timeCount = 20): array
     {
         $orders = [];
-        for ($i = 0; $i < $orderCount; $i++) {
+        for ($i = 0; $i < $orderCount; ++$i) {
             $orders[] = [
                 'customer_id' => $this->faker->numberBetween(1, $customerCount),
                 'product_id' => $this->faker->numberBetween(1, $productCount),
@@ -97,6 +102,7 @@ class DataExtractor
                 'quantity' => $this->faker->numberBetween(1, 5),
             ];
         }
+
         return $orders;
     }
 
@@ -104,7 +110,7 @@ class DataExtractor
     public function loadFromCsv(string $filePath): array
     {
         if (!file_exists($filePath) || !is_readable($filePath)) {
-            throw new \Exception("CSV file is not accessible or readable.");
+            throw new \Exception('CSV file is not accessible or readable.');
         }
 
         $header = null;
@@ -124,7 +130,7 @@ class DataExtractor
                 // Collect products
                 $products[] = [
                     'name' => $data['Item Purchased'],
-                    'category' => $data['Category']
+                    'category' => $data['Category'],
                 ];
 
                 // Collect customers
@@ -132,7 +138,7 @@ class DataExtractor
                     'customer_id' => $data['Customer ID'],
                     'age' => $data['Age'],
                     'gender' => $data['Gender'],
-                    'location' => $data['Location']
+                    'location' => $data['Location'],
                 ];
             }
             fclose($handle);
@@ -140,7 +146,7 @@ class DataExtractor
 
         return [
             'products' => $products,
-            'customers' => $customers
+            'customers' => $customers,
         ];
     }
 
@@ -155,8 +161,9 @@ class DataExtractor
         } catch (\Throwable $e) {
             $this->logger->error('Error fetching exchange rates', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return [];
         }
     }

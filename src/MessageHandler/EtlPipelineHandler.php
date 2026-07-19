@@ -5,18 +5,17 @@ namespace App\MessageHandler;
 use App\Message\EtlPipelineMessage;
 use App\Service\ETL\DataExtractor;
 use App\Service\ETL\DataLoader;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class EtlPipelineHandler
 {
     public function __construct(
-        private readonly DataExtractor   $extractor,
-        private readonly DataLoader      $loader,
+        private readonly DataExtractor $extractor,
+        private readonly DataLoader $loader,
         private readonly LoggerInterface $logger,
-    )
-    {
+    ) {
     }
 
     public function __invoke(EtlPipelineMessage $message): void
@@ -36,18 +35,19 @@ class EtlPipelineHandler
             $this->loader->loadSales($salesData);
             $this->loader->loadOrders($ordersData);
 
-            // Extract cvs data
-            $filePath = __DIR__ . '/../Csv/shopping_trends.csv';
-            $cvsData = $this->extractor->loadFromCsv($filePath);
+            // Optionally enrich from a CSV file, if one is present (see README).
+            $filePath = __DIR__.'/../Csv/shopping_trends.csv';
+            if (is_readable($filePath)) {
+                $csvData = $this->extractor->loadFromCsv($filePath);
+                $this->loader->loadCustomers($csvData['customers']);
+                $this->loader->loadProducts($csvData['products']);
+            }
 
-            // Load data into the database
-            $this->loader->loadCustomers($cvsData['customers']);
-            $this->loader->loadProducts($cvsData['products']);
             $this->logger->info('ETL pipeline executed successfully.');
         } catch (\Throwable $e) {
             $this->logger->error('Error executing ETL pipeline', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }

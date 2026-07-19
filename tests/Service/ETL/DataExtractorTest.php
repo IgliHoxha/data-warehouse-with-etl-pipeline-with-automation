@@ -85,7 +85,7 @@ class DataExtractorTest extends TestCase
 
     public function testLoadFromCsv(): void
     {
-        $csvFilePath = __DIR__ . '/test_data.csv';
+        $csvFilePath = __DIR__.'/test_data.csv';
         file_put_contents($csvFilePath, "Customer ID,Item Purchased,Category,Age,Gender,Location\n1,Apple,Electronics,25,Male,New York");
 
         $data = $this->extractor->loadFromCsv($csvFilePath);

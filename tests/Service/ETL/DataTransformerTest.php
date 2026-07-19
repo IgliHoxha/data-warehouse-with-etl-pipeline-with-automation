@@ -26,7 +26,6 @@ class DataTransformerTest extends TestCase
         $data = [];
         $result = $this->transformer->transformCustomerName($data);
         $this->assertNotEmpty($result);
-        $this->assertIsString($result);
     }
 
     public function testTransformCustomerEmailWithData(): void
@@ -41,7 +40,6 @@ class DataTransformerTest extends TestCase
         $data = [];
         $result = $this->transformer->transformCustomerEmail($data);
         $this->assertNotEmpty($result);
-        $this->assertIsString($result);
         $this->assertMatchesRegularExpression('/^.+\@\S+\.\S+$/', $result);
     }
 
@@ -56,7 +54,6 @@ class DataTransformerTest extends TestCase
     {
         $data = [];
         $result = $this->transformer->transformProductPrice($data);
-        $this->assertIsFloat($result);
         $this->assertGreaterThanOrEqual(10, $result);
         $this->assertLessThanOrEqual(1000, $result);
     }
