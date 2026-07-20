@@ -23,5 +23,6 @@
 .DS_Store
 *.bak
 
-# Claude Code — CLAUDE.md and shared .claude/settings.json stay tracked
+# Claude Code: local instructions and settings (not committed)
+/CLAUDE.md
 /.claude/settings.local.json
